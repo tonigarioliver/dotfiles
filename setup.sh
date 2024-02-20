@@ -17,6 +17,12 @@ install_if_not_installed() {
 # Instalar Stow si no está instalado
 install_if_not_installed stow
 
+# Instalar btop si no está instalado
+install_if_not_installed btop
+
+# Instalar gnome-tweaks si no está instalado
+install_if_not_installed gnome-tweaks
+
 # Instalar OpenJDK 8
 install_if_not_installed openjdk-8-jdk
 
@@ -113,4 +119,8 @@ fi
 # Directorio donde se encuentran los archivos de configuración
 dotfiles_dir="$HOME/dotfiles"
 cd "$dotfiles_dir"
-#stow --adopt . bash vim git
+# Para git
+stow --adopt -t ~ git
+
+# Para la carpeta .config
+stow --adopt -t ~ .config

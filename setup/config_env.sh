@@ -1,44 +1,67 @@
-#!/bin/bash
-chmod +x ./setup.sh
+# Function to create a backup
+create_backup() {
+    read -p "Do you want to create a backup in $HOME? (Y/n): " answer
+    if [[ $answer =~ ^[Yy]$ ]]; then
+        backup_dir="$HOME/dotfiles_backup/"
+        if [ ! -d "$backup_dir" ]; then
+            mkdir -p "$backup_dir"
+        fi
+        echo "Creating backup in $backup_dir..."
+        cp -r "$dotfiles_dir/$selected_option" "$backup_dir"
+        echo "Backup created in $backup_dir."
+    else
+        echo "No backup created."
+    fi
+}
 
-# Cambiar al directorio home/dotfiles
+# Change to the home/dotfiles directory
 dotfiles_dir="$HOME/dotfiles"
-cd "$dotfiles_dir" || { echo "Error: No se pudo acceder al directorio ~/dotfiles"; exit 1; }
+cd "$dotfiles_dir" || { echo "Error: Couldn't access the ~/dotfiles directory"; exit 1; }
 
-# Listar directorios disponibles en ~/dotfiles
-echo "Directorios disponibles en ~/dotfiles:"
-options=(*/)
+# List available directories in ~/dotfiles excluding "setup"
+echo "Directories available in ~/dotfiles (excluding 'setup'):"
+options=()
+for dir in */; do
+    if [[ "$dir" != "setup/" ]]; then
+        options+=("$dir")
+    fi
+done
+
+# Show available options to the user
 for i in "${!options[@]}"; do
     printf "%d) %s\n" "$((i+1))" "${options[$i]}"
 done
 
-# Solicitar al usuario que seleccione un directorio
+# Prompt the user to select a directory
 selected_index=0
 while ((selected_index < 1 || selected_index > ${#options[@]})); do
-    read -p "Selecciona un directorio (introduce el número correspondiente o 0 para salir): " selected_index
+    read -p "Select a directory (enter the corresponding number or 0 to exit): " selected_index
     if ((selected_index == 0)); then
-        echo "Saliendo del sistema."
+        echo "Exiting the system."
         exit 0
     else
         selected_option="${options[$((selected_index-1))]}"
-        echo "Seleccionaste: $selected_option"
+        echo "You selected: $selected_option"
 
-        # Cambiar al directorio seleccionado
-        cd "$selected_option" || { echo "Error: No se pudo acceder al directorio $selected_option"; exit 1; }
-
-        # Listar archivos en el nuevo entorno y aplicar stow adopt uno por uno
+        # Change to the selected directory
+        cd "$selected_option" || { echo "Error: Couldn't access the $selected_option directory"; exit 1; }
+	echo "hello"
+        # List files in the new environment and apply stow adopt one by one
         selected_option=${selected_option%/}
-        echo "La ruta actual del terminal es: $PWD"
+        echo "Current terminal path is: $PWD"
         for dir in */; do
-           dir=${dir%/}
-           echo "$dir"
-           echo "$HOME"
-           echo "Aplicando stow adopt a $dotfiles_dir/$selected_option $dir"...
-           stow --adopt -t $HOME $dir
+            dir=${dir%/}
+            echo "Applying stow adopt to $dotfiles_dir/$selected_option $dir"...
+            stow --adopt -t "$HOME" "$dir"
         done
 
-        echo "stow adopt completado en el entorno $selected_option."
+        echo "stow adopt completed in the $selected_option environment."
+	echo "bye"
+        # Ask the user if they want to create a backup
+        create_backup
     fi
 done
-# Restaurar cambios en dotfiles con git restore
+
+# Restore changes in dotfiles with git restore
 #git restore "$dotfiles_dir"
+

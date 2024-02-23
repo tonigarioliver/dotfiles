@@ -115,12 +115,6 @@ else
     echo "GitKraken ya está instalado. Finalizando el script..."
 fi
 
-# Vincular archivos de configuración usando Stow
-# Directorio donde se encuentran los archivos de configuración
-dotfiles_dir="$HOME/dotfiles"
-cd "$dotfiles_dir"
-# Para git
-stow --adopt -t ~ git
-
-# Para la carpeta .config
-stow --adopt -t ~ .config
+# Link configuration files using Stow
+chmod +x ./config_env.sh
+./config_env.sh

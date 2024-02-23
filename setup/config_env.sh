@@ -54,7 +54,6 @@ while ((selected_index < 1 || selected_index > ${#options[@]})); do
 
         # Change to the selected directory
         cd "$selected_option" || { echo "Error: Couldn't access the $selected_option directory"; exit 1; }
-	echo "hello"
         # List files in the new environment and apply stow adopt one by one
         selected_option=${selected_option%/}
         echo "Current terminal path is: $PWD"

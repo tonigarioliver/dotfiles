@@ -13,6 +13,15 @@ create_backup() {
         echo "No backup created."
     fi
 }
+# Function to create a backup
+apply_restore() {
+    read -p "Do you want to restore of original source symlink files? (Y/n): " answer
+    if [[ $answer =~ ^[Yy]$ ]]; then
+	git restore "$dotfiles_dir"
+    else
+        echo "No Restore executed."
+    fi
+}
 
 # Change to the home/dotfiles directory
 dotfiles_dir="$HOME/dotfiles"
@@ -59,9 +68,9 @@ while ((selected_index < 1 || selected_index > ${#options[@]})); do
 	echo "bye"
         # Ask the user if they want to create a backup
         create_backup
+        # Ask the user if they want to restore
+        apply_restore
     fi
 done
 
-# Restore changes in dotfiles with git restore
-#git restore "$dotfiles_dir"
 

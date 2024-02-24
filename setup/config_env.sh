@@ -26,14 +26,14 @@ apply_restore() {
 
 update_user_conf() {
     # Eliminar el primer archivo si existe
-    if [ -f "$HOME/.config/conf/user" ]; then
-        rm "$HOME/.config/conf/user"
+    if [ -f "$HOME/.config/dconf/user" ]; then
+        rm "$HOME/.config/dconf/user"
         echo "Se eliminó el primer archivo."
     fi
     
     # Copiar y pegar el segundo archivo
-    if [ -f "$dotfiles_dir/$selected_option/conf/.config/conf/user" ]; then
-        cp "$dotfiles_dir/$selected_option/conf/.config/conf/user" "$HOME/.config/conf/"
+    if [ -f "$dotfiles_dir/$selected_option/dconf/.config/dconf/user" ]; then
+        cp "$dotfiles_dir/$selected_option/dconf/.config/dconf/user" "$HOME/.config/dconf/"
         echo "Se copió y pegó el segundo archivo en el lugar del primero."
     else
         echo "El segundo archivo no se encontró."

@@ -23,6 +23,23 @@ apply_restore() {
     fi
 }
 
+
+update_user_conf() {
+    # Eliminar el primer archivo si existe
+    if [ -f "$HOME/.config/conf/user" ]; then
+        rm "$HOME/.config/conf/user"
+        echo "Se eliminó el primer archivo."
+    fi
+    
+    # Copiar y pegar el segundo archivo
+    if [ -f "$dotfiles_dir/$selected_option/conf/.config/conf/user" ]; then
+        cp "$dotfiles_dir/$selected_option/conf/.config/conf/user" "$HOME/.config/conf/"
+        echo "Se copió y pegó el segundo archivo en el lugar del primero."
+    else
+        echo "El segundo archivo no se encontró."
+    fi
+}
+
 # Change to the home/dotfiles directory
 dotfiles_dir="$HOME/dotfiles"
 cd "$dotfiles_dir" || { echo "Error: Couldn't access the ~/dotfiles directory"; exit 1; }
@@ -51,6 +68,8 @@ while ((selected_index < 1 || selected_index > ${#options[@]})); do
     else
         selected_option="${options[$((selected_index-1))]}"
         echo "You selected: $selected_option"
+#Update user interface
+update_user_conf
 
         # Change to the selected directory
         cd "$selected_option" || { echo "Error: Couldn't access the $selected_option directory"; exit 1; }

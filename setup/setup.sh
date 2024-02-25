@@ -114,6 +114,54 @@ else
     echo "GitKraken ya está instalado. Finalizando el script..."
 fi
 
+# Instalar Google Chrome
+wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb -P ~/Downloads
+sudo dpkg -i ~/Downloads/google-chrome-stable_current_amd64.deb
+sudo apt install -f
+rm ~/Downloads/google-chrome-stable_current_amd64.deb
+echo "Google Chrome se ha instalado correctamente."
+
+# Descomprimir el archivo descargado en /opt
+cd ~/Downloads || exit
+sudo tar xjf firefox-*.tar.bz2 -C /opt
+
+# Copiar el archivo descomprimido en /opt
+sudo cp -rp firefox* /opt
+
+# Eliminar el archivo comprimido
+sudo rm -rf firefox*.tar.bz2
+
+# Descomprimir el archivo en /opt
+cd /opt || exit
+sudo tar xjf firefox*.tar.bz2
+
+# Eliminar el archivo comprimido
+sudo rm -rf firefox*.tar.bz2
+
+# Cambiar la propiedad del directorio a $USER
+sudo chown -R $USER /opt/firefox
+
+# Crear el archivo .desktop en ~/.local/share/applications
+desktop_file=~/.local/share/applications/firefox_dev.desktop
+cat <<EOF > "$desktop_file"
+[Desktop Entry]
+Name=Firefox Developer
+GenericName=Firefox Developer Edition
+Exec=/opt/firefox/firefox %u
+Terminal=false
+Icon=/opt/firefox/browser/chrome/icons/default/default128.png
+Type=Application
+Categories=Application;Network;X-Developer;
+Comment=Firefox Developer Edition Web Browser.
+StartupWMClass=Firefox Developer Edition
+EOF
+
+# Dar permisos de ejecución al archivo .desktop
+chmod +x "$desktop_file"
+
+echo "Firefox Developer Edition se ha instalado correctamente."
+cd "$HOME"
+
 # Link configuration files using Stow
 chmod +x ./config_env.sh
 ./config_env.sh

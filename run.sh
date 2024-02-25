@@ -36,4 +36,6 @@ echo "
 
 # Mensaje de finalización
 echo "FALCON installation completed successfully!"
+echo "Rebooting system
+sudo reboot
 
